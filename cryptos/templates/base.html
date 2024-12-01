@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inversiones - {% block head_title %}Inversiones Cryptos{% endblock head_title %}</title>
+  <link rel="stylesheet" href="/static/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/static/css/solid.min.css">
+  <link rel="stylesheet" href="/static/css/flat-remix.css">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+
+  {% include 'components/header.html' %}
+  {% include 'components/navbar.html' %}
+
+
+  <main class="main">
+
+    {% block page_title %}
+    <h1>Simulador de inversiones en criptomonedas</h1>
+    {% endblock page_title %}
+
+    {% block contenido%}
+    {% endblock contenido %}
+
+  </main>
+
+  {% include 'components/footer.html' %}
+
+
+</body>
+
+</html>

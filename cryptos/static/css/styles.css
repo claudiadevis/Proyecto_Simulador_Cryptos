@@ -1,0 +1,91 @@
+:root {
+  --primary-color: hsl(189, 78%, 36%);
+  --secondary-color: #78a119;
+
+  --neutral-100: #f0f0f0;
+  --neutral-60: #666666;
+
+  --error-color: var(--primary-color);
+
+  --standard-border: solid 3px var(--primary-color);
+}
+
+header {
+  --header-height: 80px;
+  background-color: var(--primary-color);
+  color: var(--neutral-100);
+  height: var(--header-height);
+  line-height: var(--header-height);
+  padding-left: 20px;
+  font-size: large;
+}
+
+.navbar {
+  background-color: var(--secondary-color);
+  color: var(--neutral-100);
+  height: 25px;
+  line-height: 25px;
+  padding-left: 20px;
+}
+
+.navbar a,
+.navbar a:link,
+.navbar a:visited,
+.navbar a:hover,
+.navbar a:active,
+.navbar a:focus {
+  color: var(--neutral-100);
+}
+
+.main {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+.tabla {
+  width: 100%;
+  margin: 0;
+}
+
+.tabla .numero,
+.tabla .acciones {
+  text-align: right;
+}
+
+.tabla .lista-vacia {
+  text-align: center;
+  padding: 25px;
+  color: var(--neutral-60);
+}
+
+.tabla .error {
+  color: var(--error-color);
+  font-size: small;
+  margin: 0 0 10px 0;
+  line-height: 1rem;
+}
+
+.footer {
+  padding: 20px;
+  border-top: var(--standard-border);
+}
+
+.acciones .mini-boton {
+  /* border: solid thin var(--primary-color); */
+  padding: 0 5px;
+  /* background-color: lightgray; */
+  color: var(--primary-color);
+}
+
+.acciones a.mini-boton:hover {
+  text-decoration: none;
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.errors {
+  color: var(--error-color);
+  font-size: small;
+  margin: 0;
+}
