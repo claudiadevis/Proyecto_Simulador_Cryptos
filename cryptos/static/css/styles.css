@@ -1,6 +1,6 @@
 :root {
-  --primary-color: hsl(189, 78%, 36%);
-  --secondary-color: #78a119;
+  --primary-color: #b8174c;
+  --secondary-color: #19a187;
 
   --neutral-100: #f0f0f0;
   --neutral-60: #666666;
@@ -45,12 +45,7 @@ header {
 
 .tabla {
   width: 100%;
-  margin: 0;
-}
-
-.tabla .numero,
-.tabla .acciones {
-  text-align: right;
+  margin-bottom: 15px;
 }
 
 .tabla .lista-vacia {
@@ -71,21 +66,51 @@ header {
   border-top: var(--standard-border);
 }
 
-.acciones .mini-boton {
-  /* border: solid thin var(--primary-color); */
+.acciones {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.boton {
+  border: 0.5px solid var(--neutral-60);
+  cursor: pointer;
   padding: 0 5px;
-  /* background-color: lightgray; */
+  background-color: white;
   color: var(--primary-color);
 }
 
-.acciones a.mini-boton:hover {
-  text-decoration: none;
-  color: white;
-  background-color: var(--primary-color);
+.boton:hover {
+  background-color: var(--neutral-60);
+  color: var(--neutral-100)
 }
 
-.errors {
-  color: var(--error-color);
-  font-size: small;
-  margin: 0;
+.mini-boton {
+  width: 40px;
+  height: 40px;
+  background-color: var(--neutral-100);
+  color: var(--neutral-60)
+}
+
+.campo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.linea {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
+.calculadora {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.fa-custom-size {
+  font-size: 25px;
 }

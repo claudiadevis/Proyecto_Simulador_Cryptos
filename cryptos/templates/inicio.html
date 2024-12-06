@@ -7,3 +7,62 @@
 {% block page_title %}
 <h1>Movimientos</h1>
 {% endblock page_title %}
+
+{% block contenido %}
+<table class='paper tabla'>
+    <tr class="fila">
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>From</th>
+        <th>Cantidad</th>
+        <th>To</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+    </tr>
+    {% if movs %}
+    {% for m in movs %}
+    <tr class="fila">
+        {% if m.fecha_hora %}
+        <td>{{ m.fecha }}</td>
+        <td>{{ m.hora }}</td>
+        {% else %}
+        <td>None</td>
+        <td>None</td>
+        {% endif %}
+        <td>{{ m.moneda_from }}</td>
+        <td>{{ m.cantidad_from }}</td>
+        <td>{{ m.moneda_to }}</td>
+        <td>{{ m.cantidad_to }}</td>
+        <td>{{ m.precio_unitario }}</td>
+    </tr>
+    {% if m.has_errors %}
+    <tr>
+        <td colspan="4">
+            <p class="error">
+                {% for error in m.errores %}
+                {{error}}<br>
+                {% endfor %}
+            </p>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <tr class="fila">
+        <td class="lista-vacia" colspan="6">No hay movimientos</td>
+    </tr>
+    {% endif %}
+</table>
+
+<block>
+    <div class="acciones">
+        <a href="/status">
+            <button class="boton">Status</button>
+        </a>
+        <a href="/compra">
+            <button class="boton boton-derecha">+</button>
+        </a>
+    </div>
+</block>
+
+{% endblock contenido %}
