@@ -93,6 +93,7 @@ header {
 }
 
 .campo {
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   font-size: 20px;
@@ -113,4 +114,15 @@ header {
 
 .fa-custom-size {
   font-size: 25px;
+}
+
+.derecha {
+  margin-top: 10px;
+  justify-content: flex-end;
+  margin-bottom: 50px;
+}
+
+.linea_borde {
+  display: inline-block;
+  border-bottom: solid 1px #666666
 }

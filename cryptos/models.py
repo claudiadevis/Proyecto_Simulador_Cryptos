@@ -1,7 +1,11 @@
-from datetime import date, datetime
+from datetime import datetime
+from cryptos import app
 
 import sqlite3
+import requests
+
 RUTA_DB = 'cryptos/data/cryptos.db'
+
 
 monedas = [
     'EUR',
@@ -160,3 +164,28 @@ class ListaMovimientosDB:
             mov = Movimiento(dato)
             # ☺print(mov)
             self.movimientos.append(mov)
+
+
+class Consulta_coinapi:
+
+    def consultar_tasa(self,  origen, destino):
+        server = 'https://rest.coinapi.io'
+        endpoint = '/v1/exchangerate'
+        headers = {
+            'X-CoinAPI-Key': app.config['API_KEY']
+        }
+        url = server + endpoint + '/' + origen + '/' + destino
+        response = requests.get(url, headers=headers)
+        lista = []
+
+        if response.status_code == 200:
+            exchange = response.json()
+            tasa = exchange.get('rate', 0)
+            lista.append(tasa)
+            fecha_hora = exchange.get('time', '')
+            fecha, hora = fecha_hora.split('T')
+            lista.append(fecha)
+            hora = hora[:-1]
+            lista.append(hora)
+
+        return lista
