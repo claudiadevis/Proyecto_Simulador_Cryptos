@@ -25,7 +25,7 @@ class MovimientoForm(FlaskForm):
     ], validators=[DataRequired('Debe ingresar una moneda')]
     )
 
-    moneda_to = SelectField('From:', choices=[
+    moneda_to = SelectField('To:', choices=[
         ('', ''),
         ('EUR', 'Euro'),
         ('BTC', 'BTC'),
@@ -39,7 +39,7 @@ class MovimientoForm(FlaskForm):
     ], validators=[DataRequired('Debe ingresar una moneda')]
     )
 
-    cantidad = DecimalField('Q', places=6, validators=[
+    cantidad = DecimalField('Q:', places=6, validators=[
         DataRequired('No puede haber una compra sin una cantidad'),
         NumberRange(
             min=0.00001, message='No se permiten cantidades inferiores a 0.00001')

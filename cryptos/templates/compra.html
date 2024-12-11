@@ -10,28 +10,35 @@
     {{ form.csrf_token }}
 
     <!-- Moneda_from y to -->
-    <div class="campo">
-        {{form.moneda_from.label}}
-        {{form.moneda_from}}
+    <div class="linea">
+        <div>
+            {{form.moneda_from.label}}
+            {{form.moneda_from}}
+        </div>
+        <div>
+            {{form.moneda_to.label}}
+            {{form.moneda_to}}
+        </div>
     </div>
 
-    <div class="campo">
-        {{form.moneda_to.label}}
-        {{form.moneda_to}}
+    <div class="linea">
+        <div class="campo">
+            {{form.cantidad.label}}
+            {{form.cantidad}}
+            <button class="mini-boton">
+                <i class="fa-solid fa-calculator"></i>
+            </button>
+        </div>
+
+        <div class="derecha">
+            <label for="cantidad_to">Q:</label>
+            <span class="linea_borde">1000</span>
+        </div>
     </div>
 
-    <div class="campo">
-        {{form.cantidad.label}}
-        {{form.cantidad}}
-    </div>
-
-    </div class="cantidad_to">
-    <label for="cantidad_to">Q:</label>
-    <span class="linea_borde">{{cantidad_to}}</span>
-    </div>
 
     <div class="campo derecha">
-        <label for="P.U.">Q:</label>
+        <label for="P.U.">P.U.:</label>
         <span class="linea_borde">{{Precio_unitario}}</span>
     </div>
 
