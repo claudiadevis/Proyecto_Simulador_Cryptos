@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import render_template, request
+from flask import Flask, render_template, request
 
 from . import app
 from .models import ListaMovimientosDB, Consulta_coinapi, Movimiento
@@ -23,31 +23,35 @@ def compra():
 
     if request.method == 'POST':
 
-        if formulario.validate():
-            moneda_from = formulario.moneda_from.data
-            moneda_to = formulario.moneda_to.data
-            cantidad_from = formulario.cantidad.data
-            if moneda_from == moneda_to:
-                return "La moneda origen no puede ser igual a la moneda destino"
+        boton = request.form['boton']
 
-            consulta = Consulta_coinapi()
-            fecha_tasa_coinapi = consulta.consultar_tasa(
-                moneda_from, moneda_to)
-            tasa_coinapi = float(fecha_tasa_coinapi[0])
-            cantidad_to = cantidad_from * tasa_coinapi
+        if boton == 'calcular':
 
-            mov_dict = {
-                'fecha': fecha_tasa_coinapi[1],
-                'hora': fecha_tasa_coinapi[2],
-                'moneda_from': moneda_from,
-                'cantidad_from': cantidad_from,
-                'moneda_to': moneda_to,
-                'cantidad_to': cantidad_to,
-            }
+            if formulario.validate():
+                moneda_from = formulario.moneda_from.data
+                moneda_to = formulario.moneda_to.data
+                cantidad_from = formulario.cantidad.data
 
-            movimiento = Movimiento(mov_dict)
+                consulta = Consulta_coinapi(
+                    moneda_from, moneda_to, cantidad_from)
+                cantidad_to = consulta.calcular_cantidad_to()
+                precio_unitario = consulta.calcular_precio_unitario()
 
-            return render_template('compra.html', form=formulario, mov=movimiento, cantidad_to=cantidad_to)
+                # mov_dict = {
+                #     'fecha': fecha_tasa_coinapi[1],
+                #     'hora': fecha_tasa_coinapi[2],
+                #     'moneda_from': moneda_from,
+                #     'cantidad_from': cantidad_from,
+                #     'moneda_to': moneda_to,
+                #     'cantidad_to': cantidad_to,
+                # }
 
-        else:
-            return "Error"
+                # movimiento = Movimiento(mov_dict)
+
+                return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario)
+
+        elif boton == 'enviar':
+            return render_template('compra.html', form=formulario)
+
+    else:
+        return "Error"

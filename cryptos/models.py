@@ -168,24 +168,47 @@ class ListaMovimientosDB:
 
 class Consulta_coinapi:
 
-    def consultar_tasa(self,  origen, destino):
+    def __init__(self, moneda_from, moneda_to, cantidad_from):
+        self.moneda_from = moneda_from
+        self.moneda_to = moneda_to
+        self.cantidad_from = cantidad_from
+        self.tasa = 0
+        self.cantidad_to = 0
+
+    def consultar_tasa(self):
         server = 'https://rest.coinapi.io'
         endpoint = '/v1/exchangerate'
         headers = {
             'X-CoinAPI-Key': app.config['API_KEY']
         }
-        url = server + endpoint + '/' + origen + '/' + destino
+        url = server + endpoint + '/' + self.moneda_from + '/' + self.moneda_to
         response = requests.get(url, headers=headers)
-        lista = []
 
         if response.status_code == 200:
             exchange = response.json()
-            tasa = exchange.get('rate', 0)
-            lista.append(tasa)
-            fecha_hora = exchange.get('time', '')
-            fecha, hora = fecha_hora.split('T')
-            lista.append(fecha)
-            hora = hora[:-1]
-            lista.append(hora)
+            rate = exchange.get('rate', 0)
+            if rate:
+                self.tasa = float(rate)
+                # lista.append(tasa)
+                # fecha_hora = exchange.get('time', '')
+                # fecha, hora = fecha_hora.split('T')
+                # lista.append(fecha)
+                # hora = hora[:-1]
+                # lista.append(hora)
+                if self.tasa > 0:
+                    return self.tasa
+                else:
+                    return 'La tasa es menor que cero, no se puede efectuar la transacción'
+            else:
+                return 'Ha ocurrido un error con la obtención de la tasa'
+        else:
+            return 'Ha ocurrido un error con la petición a Coinapi'
 
-        return lista
+    def calcular_cantidad_to(self):
+        tasa = self.consultar_tasa()
+        self.cantidad_to = self.cantidad_from * tasa
+        return self.cantidad_to
+
+    def calcular_precio_unitario(self):
+        precio_unitario = self.cantidad_from / self.cantidad_to
+        return precio_unitario

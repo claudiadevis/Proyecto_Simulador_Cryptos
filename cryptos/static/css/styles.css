@@ -1,6 +1,6 @@
 :root {
-  --primary-color: #b8174c;
-  --secondary-color: #19a187;
+  --primary-color: #daa923;
+  --secondary-color: #a12397;
 
   --neutral-100: #f0f0f0;
   --neutral-60: #666666;
@@ -18,6 +18,15 @@ header {
   line-height: var(--header-height);
   padding-left: 20px;
   font-size: large;
+}
+
+h1 {
+  text-align: center;
+  font-size: 45px;
+}
+
+label {
+  font-size: 20px;
 }
 
 .navbar {
@@ -75,7 +84,6 @@ header {
 .boton {
   border: 0.5px solid var(--neutral-60);
   cursor: pointer;
-  padding: 0 5px;
   background-color: white;
   color: var(--primary-color);
 }
@@ -105,6 +113,7 @@ header {
   justify-content: space-between;
   align-items: center;
   font-size: 20px;
+  margin-bottom: 25px;
 }
 
 .fa-custom-size {
@@ -112,9 +121,8 @@ header {
 }
 
 .derecha {
-  margin-top: 10px;
   justify-content: flex-end;
-  margin-bottom: 50px;
+  margin-top: 40px;
 }
 
 .linea_borde {

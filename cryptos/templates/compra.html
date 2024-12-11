@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_title%}
-<h1>Comprar cryptos</h1>
+<h1>Compra de Cryptos</h1>
 {% endblock page_title %}
 
 {% block contenido %}
@@ -25,29 +25,30 @@
         <div class="campo">
             {{form.cantidad.label}}
             {{form.cantidad}}
-            <button class="mini-boton">
-                <i class="fa-solid fa-calculator"></i>
+            <button name="boton" value="calcular" class="mini-boton">
+                <i class="fa-solid fa-calculator fa-custom-size"></i>
             </button>
         </div>
-
-        <div class="derecha">
-            <label for="cantidad_to">Q:</label>
-            <span class="linea_borde">1000</span>
+        <div class="campo">
+            <div class="derecha">
+                <label for="cantidad_to">Q:</label>
+                <span class="linea_borde">{{cantidad_to}}</span>
+            </div>
         </div>
     </div>
 
 
     <div class="campo derecha">
         <label for="P.U.">P.U.:</label>
-        <span class="linea_borde">{{Precio_unitario}}</span>
+        <span class="linea_borde"></span>
     </div>
 
     <div class="campo derecha">
-        <button class="mini-boton">
-            <i class="fa-solid fa-check"></i>
+        <button name="boton" value="enviar" class="mini-boton">
+            <i class="fa-solid fa-check fa-custom-size">{{precio_unitario}}</i>
         </button>
     </div>
-
+    </div>
 </form>
 
 {% endblock contenido %}
