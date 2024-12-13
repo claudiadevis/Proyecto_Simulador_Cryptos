@@ -171,7 +171,7 @@ class Consulta_coinapi:
     def __init__(self, moneda_from, moneda_to, cantidad_from):
         self.moneda_from = moneda_from
         self.moneda_to = moneda_to
-        self.cantidad_from = cantidad_from
+        self.cantidad_from = float(cantidad_from)
         self.tasa = 0
         self.cantidad_to = 0
 
@@ -187,14 +187,14 @@ class Consulta_coinapi:
         if response.status_code == 200:
             exchange = response.json()
             rate = exchange.get('rate', 0)
+            datetime = exchange.get('time', '')
+
             if rate:
                 self.tasa = float(rate)
-                # lista.append(tasa)
-                # fecha_hora = exchange.get('time', '')
-                # fecha, hora = fecha_hora.split('T')
-                # lista.append(fecha)
-                # hora = hora[:-1]
-                # lista.append(hora)
+                fecha, hora = datetime.split('T')
+                self.fecha = fecha
+                self.hora = hora[:-1]
+
                 if self.tasa > 0:
                     return self.tasa
                 else:
@@ -212,3 +212,16 @@ class Consulta_coinapi:
     def calcular_precio_unitario(self):
         precio_unitario = self.cantidad_from / self.cantidad_to
         return precio_unitario
+
+    def construir_movimiento(self):
+
+        mov_dict = {
+            'fecha': self.fecha,
+            'hora': self.hora,
+            'moneda_from': self.moneda_from,
+            'cantidad_from': self.cantidad_from,
+            'moneda_to': self.moneda_to,
+            'cantidad_to': self.cantidad_to,
+        }
+
+        return mov_dict

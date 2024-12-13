@@ -50,7 +50,21 @@ def compra():
 
                 return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario)
 
+            else:
+                return render_template('compra.html', form=formulario)
+
         elif boton == 'enviar':
+            if formulario.validate():
+                moneda_from = formulario.moneda_from.data
+                moneda_to = formulario.moneda_to.data
+                cantidad_from = formulario.cantidad.data
+
+                consulta = Consulta_coinapi(
+                    moneda_from, moneda_to, cantidad_from)
+                consulta.calcular_cantidad_to()
+                consulta.calcular_precio_unitario()
+                movimiento = consulta.construir_movimiento()
+
             return render_template('compra.html', form=formulario)
 
     else:

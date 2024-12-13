@@ -6,6 +6,18 @@
 
 {% block contenido %}
 
+{% if form.errors %}
+<div class="errores">
+    <p>
+        Algunos datos que has insertado son inválidos:
+    </p>
+
+    <ul>
+        {{ form.errors}}
+    </ul>
+</div>
+{% endif %}
+
 <form action="/compra" method="post" class="formulario">
     {{ form.csrf_token }}
 
@@ -40,12 +52,12 @@
 
     <div class="campo derecha">
         <label for="P.U.">P.U.:</label>
-        <span class="linea_borde"></span>
+        <span class="linea_borde">{{precio_unitario}}</span>
     </div>
 
     <div class="campo derecha">
         <button name="boton" value="enviar" class="mini-boton">
-            <i class="fa-solid fa-check fa-custom-size">{{precio_unitario}}</i>
+            <i class="fa-solid fa-check fa-custom-size"></i>
         </button>
     </div>
     </div>
