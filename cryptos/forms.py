@@ -13,6 +13,8 @@ def validate_moneda(form, field):
     if field.data not in monedas:
         raise ValidationError(
             f'La moneda seleccionada "{field.data}" no se encuentra dentro del listado de monedas permitidas en la transacción')
+    if field.data == '':
+        raise ValidationError(f'Selecciona una moneda del desplegable')
 
 
 def validate_monedas(form, field):

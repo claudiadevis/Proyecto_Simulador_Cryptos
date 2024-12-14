@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from flask import flash
 from cryptos import app
 
 import sqlite3
@@ -52,6 +54,34 @@ class DBManager:
 
         conexion.close()
         return self.registros
+
+    def agregar_movimiento(self, Movimiento):
+        conexion = sqlite3.connect(self.ruta)
+        cursor = conexion.cursor()
+
+        sql = 'INSERT INTO movimientos (date, time, from_currency, from_quantity, to_currency, to_quantity) VALUES (?, ?, ?, ?, ?, ?)'
+
+        try:
+            params = (
+                Movimiento.fecha,
+                Movimiento.hora,
+                Movimiento.moneda_from,
+                Movimiento.cantidad_from,
+                Movimiento.moneda_to,
+                Movimiento.cantidad_to,
+            )
+            cursor.execute(sql, params)
+            conexion.commit()
+            resultado = cursor.rowcount
+
+        except Exception as ex:
+            print('Ha ocurrido un error al añadir el movimiento en la base de datos')
+            print(ex)
+            conexion.rollback()
+
+        conexion.close()
+
+        return resultado
 
 
 class Movimiento:
@@ -165,6 +195,10 @@ class ListaMovimientosDB:
             # ☺print(mov)
             self.movimientos.append(mov)
 
+    def agregar_movimiento(self, movimiento):
+        db = DBManager(RUTA_DB)
+        return db.agregar_movimiento(movimiento)
+
 
 class Consulta_coinapi:
 
@@ -213,15 +247,16 @@ class Consulta_coinapi:
         precio_unitario = self.cantidad_from / self.cantidad_to
         return precio_unitario
 
-    def construir_movimiento(self):
+    def construir_diccionario(self):
 
         mov_dict = {
-            'fecha': self.fecha,
-            'hora': self.hora,
-            'moneda_from': self.moneda_from,
-            'cantidad_from': self.cantidad_from,
-            'moneda_to': self.moneda_to,
-            'cantidad_to': self.cantidad_to,
+            'date': self.fecha,
+            'time': self.hora,
+            'from_currency': self.moneda_from,
+            'from_quantity': self.cantidad_from,
+            'to_currency': self.moneda_to,
+            'to_quantity': self.cantidad_to,
         }
-
+        print(f'Moneda from = {self.moneda_from}')
+        print(f'Moneda to = {self.moneda_to}')
         return mov_dict
