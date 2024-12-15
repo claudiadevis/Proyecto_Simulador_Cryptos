@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page_title%}
+<h1>Estado de la inversión</h1>
+{% endblock page_title %}
+
+{% block contenido %}
+<table class='paper tabla'>
+    <tr class="fila">
+        <th>Moneda:</th>
+        <th>Total:</th>
+    </tr>
+    {% if totales_monedas %}
+    {% for total in totales_monedas %}
+    <tr class="fila">
+        <td>{{ total['to_currency'] }}</td>
+        <td>{{ total['suma_total'] }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td class="lista-vacia" colspan="6">Aún no se ha realizado ninguna transacción</td>
+    </tr>
+    {% endif %}
+</table>
+{% endblock %}

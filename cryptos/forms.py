@@ -35,7 +35,8 @@ class MovimientoForm(FlaskForm):
         ('SOL', 'Solana'),
         ('XRP', 'Ripple'),
         ('DOT', 'Polkadot'),
-        ('DOGE', 'Dogecoin')
+        ('DOGE', 'Dogecoin'),
+        ('SHIB', 'Shiba Inu'),
     ]
 
     moneda_from = SelectField('From:', choices=lista_monedas, validators=[DataRequired('Debe ingresar una moneda'), validate_moneda]
