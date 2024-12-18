@@ -82,31 +82,6 @@ class DBManager:
 
         return resultado
 
-    # def consulta_totales(self):
-
-    #     conexion = sqlite3.connect(self.ruta)
-    #     cursor = conexion.cursor()
-    #     sql = 'SELECT to_currency, SUM(to_quantity) as suma_total FROM movimientos GROUP BY to_currency'
-    #     cursor.execute(sql)
-    #     datos = cursor.fetchall()
-
-    #     self.registros = []
-    #     nombres_columna = []
-
-    #     for columna in cursor.description:
-    #         nombres_columna.append(columna[0])
-
-    #     for dato in datos:
-    #         total_moneda = {}
-    #         indice = 0
-    #         for nombre in nombres_columna:
-    #             total_moneda[nombre] = dato[indice]
-    #             indice += 1
-    #         self.registros.append(total_moneda)
-
-    #     conexion.close()
-    #     return self.registros
-
 
 class Movimiento:
 

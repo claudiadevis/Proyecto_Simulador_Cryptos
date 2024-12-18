@@ -25,11 +25,21 @@
     <div class="linea">
         <div>
             {{form.moneda_from.label}}
-            {{form.moneda_from (readonly=deshabilitar)}}
+            {% if not blockControl %}
+            {{form.moneda_from}}
+            {% else %}
+            <input type="hidden" name="moneda_from" value="{{form.moneda_from.data}}">
+            {{form.moneda_from.data}}
+            {% endif %}
         </div>
         <div>
             {{form.moneda_to.label}}
-            {{form.moneda_to (readonly=deshabilitar)}}
+            {% if not blockControl %}
+            {{form.moneda_to}}
+            {% else %}
+            <input type="hidden" name="moneda_to" value="{{form.moneda_to.data}}">
+            {{form.moneda_to.data}}
+            {% endif %}
         </div>
     </div>
 

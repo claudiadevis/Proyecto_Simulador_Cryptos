@@ -39,10 +39,16 @@ class MovimientoForm(FlaskForm):
         ('SHIB', 'Shiba Inu'),
     ]
 
-    moneda_from = SelectField('From:', choices=lista_monedas, validators=[DataRequired('Debe ingresar una moneda'), validate_moneda]
+    moneda_from = SelectField('From:', choices=lista_monedas,
+                              validators=[DataRequired(
+                                  'Debe ingresar una moneda'), validate_moneda],
+                              render_kw={'disabled': False}
                               )
 
-    moneda_to = SelectField('To:', choices=lista_monedas, validators=[DataRequired('Debe ingresar una moneda'), validate_moneda, validate_monedas]
+    moneda_to = SelectField('To:', choices=lista_monedas,
+                            validators=[DataRequired('Debe ingresar una moneda'),
+                                        validate_moneda, validate_monedas],
+                            render_kw={'disabled': False}
                             )
 
     cantidad = DecimalField('Q:', places=6, validators=[

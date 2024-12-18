@@ -17,9 +17,8 @@ def home():
 @app.route('/compra', methods=['GET', 'POST'])
 def compra():
     formulario = MovimientoForm(data=request.form)
-    deshabilitar = False
     if request.method == 'GET':
-        return render_template('compra.html', form=formulario, deshabilitar=deshabilitar)
+        return render_template('compra.html', form=formulario)
 
     if request.method == 'POST':
 
@@ -28,7 +27,6 @@ def compra():
         if boton == 'calcular':
 
             if formulario.validate():
-
                 moneda_from = formulario.moneda_from.data
                 moneda_to = formulario.moneda_to.data
                 cantidad_from = formulario.cantidad.data
@@ -37,25 +35,21 @@ def compra():
                     moneda_from, moneda_to, cantidad_from)
                 cantidad_to = consulta.calcular_cantidad_to()
                 precio_unitario = consulta.calcular_precio_unitario()
-                deshabilitar = True
 
-                return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario, deshabilitar=deshabilitar)
+                return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario, blockControl=True)
 
             else:
-                deshabilitar = False
-                return render_template('compra.html', form=formulario, deshabilitar=deshabilitar)
+                return render_template('compra.html', form=formulario)
 
         elif boton == 'enviar':
             if formulario.validate():
                 moneda_from = formulario.moneda_from.data
                 moneda_to = formulario.moneda_to.data
                 cantidad_from = formulario.cantidad.data
-                # print(f'Moneda from1 = {moneda_from}')
 
                 consulta = Consulta_coinapi(
                     moneda_from, moneda_to, cantidad_from)
                 consulta.calcular_cantidad_to()
-                # print(f'Moneda to1 = {moneda_to}')
                 consulta.calcular_precio_unitario()
                 mov_dict = consulta.construir_diccionario()
 
@@ -70,8 +64,7 @@ def compra():
                 else:
                     flash('Houston, tenemos un problema')
 
-            deshabilitar = False
-            return render_template('compra.html', form=formulario, deshabilitar=deshabilitar)
+            return render_template('compra.html', form=formulario)
 
     else:
         return "Error"
