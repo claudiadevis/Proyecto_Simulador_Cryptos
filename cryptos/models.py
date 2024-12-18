@@ -264,20 +264,24 @@ class Consulta_coinapi:
 class Cartera():
 
     def __init__(self):
-        self.totales = []
-        # self.EUR = 0
-        # self.BTC = 0
-        # self.ETH = 0
-        # self.USDT = 0
-        # self.ADA = 0
-        # self.SOL = 0
-        # self.XRP = 0
-        # self.DOT = 0
-        # self.DOGE = 0
-        # self.SHIB = 0
+        self.total = 0
+        self.nuevo_diccionario = {}
+        self.monedas = monedas
+        self.RUTA_DB = RUTA_DB
 
-    def consulta_totales_SQL(self):
-        db = DBManager(RUTA_DB)
-        consulta = 'SELECT to_currency, SUM(to_quantity) as suma_total FROM movimientos GROUP BY to_currency'
-        self.totales = db.consultarSQL(consulta)
-        return self.totales
+    def consulta_sql(self):
+        db = DBManager(self.RUTA_DB)
+
+        consulta_to = 'SELECT to_currency, SUM(to_quantity) as suma_to FROM movimientos GROUP BY to_currency'
+        self.lista_to = db.consultarSQL(consulta_to)
+
+        consulta_from = 'SELECT from_currency, SUM(from_quantity) as suma_from FROM movimientos GROUP BY from_currency'
+        self.lista_from = db.consultarSQL(consulta_from)
+
+        # for moneda in self.monedas:
+        for diccionario in self.lista_to:
+            nueva_clave = diccionario['to_currency']
+            nuevo_valor = diccionario['suma_to']
+            self.nuevo_diccionario[nueva_clave] = nuevo_valor
+
+        return self.nuevo_diccionario
