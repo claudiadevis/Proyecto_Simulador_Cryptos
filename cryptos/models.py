@@ -265,6 +265,7 @@ class Cartera():
         self.RUTA_DB = RUTA_DB
         self.diccionario_resta = {}
         self.total_euros = {}
+        self.euros_equiv = {}
 
     def consulta_sql(self):
         diccionario_to_sql = {}
@@ -328,7 +329,7 @@ class Cartera():
             clave: self.nuevo_diccionario_to[clave] -
             self.nuevo_diccionario_from[clave]
             for clave in self.nuevo_diccionario_to}
-        print('diccionario resta', self.diccionario_resta)
+        # print('diccionario resta', self.diccionario_resta)
 
         return self.diccionario_resta
 
@@ -349,4 +350,10 @@ class Cartera():
                          for item in dict_filtrado}
         # print('resultado_filtrado', tasas_monedas)
 
-        return tasas_monedas
+        # print('tasas_monedas', tasas_monedas)
+
+        self.euros_equiv = {
+            moneda: self.diccionario_resta[moneda] * 1/tasas_monedas[moneda] for moneda in self.diccionario_resta if moneda in tasas_monedas
+        }
+        # print(self.euros_equiv)
+        return self.euros_equiv
