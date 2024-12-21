@@ -10,17 +10,17 @@
         <th>Moneda:</th>
         <th>Total:</th>
     </tr>
-    {% if totales_monedas %}
-    {% for total in totales_monedas %}
+    {% for moneda, total in totales_monedas.items() %}
     <tr class="fila">
-        <td>{{ total['to_currency'] }}</td>
-        <td>{{ total['suma_total'] }}</td>
+        <td>{{ moneda }}</td>
+        <td>{{ total }}</td>
     </tr>
     {% endfor %}
-    {% else %}
-    <tr>
-        <td class="lista-vacia" colspan="6">Aún no se ha realizado ninguna transacción</td>
-    </tr>
-    {% endif %}
 </table>
+
+{% if total_euros %}
+<p>
+    Euros invertidos: {{total_euros}}
+</p>
+{% endif %}
 {% endblock %}

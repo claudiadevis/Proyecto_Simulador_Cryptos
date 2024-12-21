@@ -33,6 +33,7 @@ def compra():
 
                 consulta = Consulta_coinapi(
                     moneda_from, moneda_to, cantidad_from)
+                tasa_fecha = consulta.consultar_tasa()
                 cantidad_to = consulta.calcular_cantidad_to()
                 precio_unitario = consulta.calcular_precio_unitario()
 
@@ -49,8 +50,10 @@ def compra():
 
                 consulta = Consulta_coinapi(
                     moneda_from, moneda_to, cantidad_from)
-                consulta.calcular_cantidad_to()
-                consulta.calcular_precio_unitario()
+                tasa_fecha = consulta.consultar_tasa()
+                consulta.obtener_fecha(tasa_fecha[1])
+                cantidad_to = consulta.calcular_cantidad_to()
+                precio_unitario = consulta.calcular_precio_unitario()
                 mov_dict = consulta.construir_diccionario()
 
                 lista = ListaMovimientosDB()
@@ -73,6 +76,9 @@ def compra():
 @app.route('/status')
 def estado():
     cartera = Cartera()
-    totales = cartera.consulta_totales_SQL()
-    print(totales)
-    return render_template('status.html', totales_monedas=totales)
+    cartera.consulta_sql()
+    total_euros = cartera.obtener_euros_invertidos()
+    print(total_euros)
+    totales_monedas = cartera.obtener_totales_monedas()
+    print(totales_monedas)
+    return render_template('status.html', totales_monedas=totales_monedas, total_euros=total_euros)
