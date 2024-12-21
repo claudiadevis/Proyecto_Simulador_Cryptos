@@ -25,6 +25,11 @@ h1 {
   font-size: 45px;
 }
 
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 label {
   font-size: 20px;
 }

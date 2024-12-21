@@ -5,20 +5,26 @@
 {% endblock page_title %}
 
 {% block contenido %}
+
+<h2>
+    Invertido (EUR):
+    <span class="linea_borde">{{total_euros}}</span>
+</h2>
+
 <table class='paper tabla'>
     <tr class="fila">
         <th>Moneda:</th>
         <th>Total:</th>
+        <th>Euros equivalentes:</th>
     </tr>
     {% for moneda, total in totales_monedas.items() %}
+    {% if moneda != 'EUR' %}
     <tr class="fila">
         <td>{{ moneda }}</td>
         <td>{{ total }}</td>
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 
-<p>
-    Euros invertidos: {{total_euros}}
-</p>
 {% endblock %}

@@ -19,7 +19,6 @@ monedas = [
     'DOT',
     'DOGE',
     'SHIB',
-    'CLAUDIA'
 ]
 
 
@@ -333,15 +332,21 @@ class Cartera():
 
         return self.diccionario_resta
 
-    # def encontrar_monedas(self, diccionario):
-    #     if diccionario['asset_id_quote'] in monedas:
-    #         return True
-    #     return False
+    def encontrar_monedas(self, diccionario):
+        if diccionario['asset_id_quote'] in self.monedas:
+            return True
+        return False
 
-    # def filtrar_monedas(self):
-    #     consulta = Consulta_coinapi('EUR', '', 1)
-    #     print(consulta)
-    #     dict_filtrado = filter(
-    #         self.encontrar_monedas, consulta)
-    #     print(dict_filtrado)
-    #     return dict_filtrado
+    def filtrar_monedas(self):
+        consulta = Consulta_coinapi('EUR', '', 1)
+        exchange = consulta.consultar_tasa()
+        tasas = exchange['rates']
+
+        dict_filtrado = filter(
+            self.encontrar_monedas, tasas)
+
+        tasas_monedas = {item['asset_id_quote']: item['rate']
+                         for item in dict_filtrado}
+        # print('resultado_filtrado', tasas_monedas)
+
+        return tasas_monedas
