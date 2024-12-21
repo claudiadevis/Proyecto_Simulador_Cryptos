@@ -80,5 +80,4 @@ def estado():
     total_euros = cartera.obtener_euros_invertidos()
     print(total_euros)
     totales_monedas = cartera.obtener_totales_monedas()
-    print(totales_monedas)
     return render_template('status.html', totales_monedas=totales_monedas, total_euros=total_euros)

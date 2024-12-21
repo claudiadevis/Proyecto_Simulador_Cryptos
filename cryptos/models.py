@@ -103,7 +103,7 @@ class Movimiento:
             fecha_hora = fecha + 'T' + hora + 'Z'
             self.fecha_hora = datetime.fromisoformat(fecha_hora)
             self.fecha = fecha
-            self.hora = hora
+            self.hora = hora[:8]
         except ValueError:
             self.fecha_hora = None
             mensaje = f'La fecha u hora no están en el formato ISO 8601'
@@ -149,7 +149,7 @@ class Movimiento:
         try:
             valor = float(cantidad_to)
             if valor > 0:
-                self.cantidad_to = round(valor, 6)
+                self.cantidad_to = round(valor, 4)
             else:
                 self.cantidad_to = 0
                 mensaje = f'El importe de la cantidad debe ser un número mayor que cero'
@@ -163,7 +163,7 @@ class Movimiento:
         if self.cantidad_to:
             if self.cantidad_from:
                 self.precio_unitario = round(
-                    self.cantidad_from / self.cantidad_to, 8)
+                    self.cantidad_from / self.cantidad_to, 4)
 
     @property
     def has_errors(self):
@@ -295,7 +295,7 @@ class Cartera():
                     break
                 else:
                     self.nuevo_diccionario_to[moneda] = 0
-        print('diccionario to', self.nuevo_diccionario_to)
+        # print('diccionario to', self.nuevo_diccionario_to)
 
         # diccionario from
         for diccionario in lista_from:
@@ -311,7 +311,7 @@ class Cartera():
                     break
                 else:
                     self.nuevo_diccionario_from[moneda] = 0
-        print('diccionario from', self.nuevo_diccionario_from)
+        # print('diccionario from', self.nuevo_diccionario_from)
 
         diccionarios = [self.nuevo_diccionario_from, self.nuevo_diccionario_to]
 
@@ -322,6 +322,7 @@ class Cartera():
             self.total_euros = self.nuevo_diccionario_from['EUR']
         else:
             self.total_euros = 0
+        return self.total_euros
 
         # diccionario resta
     def obtener_totales_monedas(self):
@@ -333,18 +334,18 @@ class Cartera():
 
         return self.diccionario_resta
 
-    # def encontrar_monedas(self, lista_diccionarios):
-    #     for moneda in monedas:
-    #         if moneda in lista_diccionarios:
-    #             return True
-    #         else:
-    #             return False
+    def encontrar_monedas(self, lista_diccionarios):
+        for moneda in monedas:
+            if moneda in lista_diccionarios:
+                return True
+            else:
+                return False
 
-    # def filtrar_monedas(self, diccionario):
-    #     coinapi_dict_filtrado = filter(
-    #         self.encontrar_monedas, diccionario)
-    #     return coinapi_dict_filtrado
+    def filtrar_monedas(self, diccionario):
+        coinapi_dict_filtrado = filter(
+            self.encontrar_monedas, diccionario)
+        return coinapi_dict_filtrado
 
-    # def consultar_tasa(self):
-        # consulta = Consulta_coinapi('EUR', '', 1)
-        # print(consulta)
+    def consultar_tasa(self):
+        consulta = Consulta_coinapi('EUR', '', 1)
+        print(consulta)
