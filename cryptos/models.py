@@ -19,6 +19,7 @@ monedas = [
     'DOT',
     'DOGE',
     'SHIB',
+    'CLAUDIA'
 ]
 
 
@@ -148,7 +149,7 @@ class Movimiento:
         try:
             valor = float(cantidad_to)
             if valor > 0:
-                self.cantidad_to = valor
+                self.cantidad_to = round(valor, 6)
             else:
                 self.cantidad_to = 0
                 mensaje = f'El importe de la cantidad debe ser un número mayor que cero'
@@ -162,7 +163,7 @@ class Movimiento:
         if self.cantidad_to:
             if self.cantidad_from:
                 self.precio_unitario = round(
-                    self.cantidad_from / self.cantidad_to, 4)
+                    self.cantidad_from / self.cantidad_to, 8)
 
     @property
     def has_errors(self):
@@ -221,25 +222,22 @@ class Consulta_coinapi:
             exchange = response.json()
             rate = exchange.get('rate', 0)
             datetime = exchange.get('time', '')
-
-            if rate:
-                self.tasa = float(rate)
-                fecha, hora = datetime.split('T')
-                self.fecha = fecha
-                self.hora = hora[:-1]
-
-                if self.tasa > 0:
-                    return self.tasa
-                else:
-                    return 'La tasa es menor que cero, no se puede efectuar la transacción'
+            self.tasa = float(rate)
+            if self.tasa > 0:
+                tasa_fecha = [self.tasa, datetime]
+                return tasa_fecha
             else:
-                return 'Ha ocurrido un error con la obtención de la tasa'
+                return 'La tasa es menor que cero, no se puede efectuar la transacción'
         else:
             return 'Ha ocurrido un error con la petición a Coinapi'
 
+    def obtener_fecha(self, fecha_hora):
+        fecha, hora = fecha_hora.split('T')
+        self.fecha = fecha
+        self.hora = hora[:-1]
+
     def calcular_cantidad_to(self):
-        tasa = self.consultar_tasa()
-        self.cantidad_to = self.cantidad_from * tasa
+        self.cantidad_to = self.cantidad_from * self.tasa
         return self.cantidad_to
 
     def calcular_precio_unitario(self):
@@ -265,23 +263,88 @@ class Cartera():
 
     def __init__(self):
         self.total = 0
-        self.nuevo_diccionario = {}
         self.monedas = monedas
         self.RUTA_DB = RUTA_DB
+        self.diccionario_resta = {}
+        self.total_euros = {}
 
     def consulta_sql(self):
+        diccionario_to_sql = {}
+        diccionario_from_sql = {}
+        self.nuevo_diccionario_to = {}
+        self.nuevo_diccionario_from = {}
         db = DBManager(self.RUTA_DB)
 
         consulta_to = 'SELECT to_currency, SUM(to_quantity) as suma_to FROM movimientos GROUP BY to_currency'
-        self.lista_to = db.consultarSQL(consulta_to)
+        lista_to = db.consultarSQL(consulta_to)
 
         consulta_from = 'SELECT from_currency, SUM(from_quantity) as suma_from FROM movimientos GROUP BY from_currency'
-        self.lista_from = db.consultarSQL(consulta_from)
+        lista_from = db.consultarSQL(consulta_from)
 
-        # for moneda in self.monedas:
-        for diccionario in self.lista_to:
+        # diccionario to
+        for diccionario in lista_to:
             nueva_clave = diccionario['to_currency']
             nuevo_valor = diccionario['suma_to']
-            self.nuevo_diccionario[nueva_clave] = nuevo_valor
+            diccionario_to_sql[nueva_clave] = nuevo_valor
+        # print(diccionario_to_sql)
 
-        return self.nuevo_diccionario
+        for moneda in monedas:
+            for clave, valor in diccionario_to_sql.items():
+                if moneda in clave:
+                    self.nuevo_diccionario_to[moneda] = valor
+                    break
+                else:
+                    self.nuevo_diccionario_to[moneda] = 0
+        print('diccionario to', self.nuevo_diccionario_to)
+
+        # diccionario from
+        for diccionario in lista_from:
+            nueva_clave = diccionario['from_currency']
+            nuevo_valor = diccionario['suma_from']
+            diccionario_from_sql[nueva_clave] = nuevo_valor
+        # print(diccionario_from_sql)
+
+        for moneda in monedas:
+            for clave, valor in diccionario_from_sql.items():
+                if moneda in clave:
+                    self.nuevo_diccionario_from[moneda] = valor
+                    break
+                else:
+                    self.nuevo_diccionario_from[moneda] = 0
+        print('diccionario from', self.nuevo_diccionario_from)
+
+        diccionarios = [self.nuevo_diccionario_from, self.nuevo_diccionario_to]
+
+        return diccionarios
+
+    def obtener_euros_invertidos(self):
+        if self.nuevo_diccionario_from['EUR']:
+            self.total_euros = self.nuevo_diccionario_from['EUR']
+        else:
+            self.total_euros = 0
+
+        # diccionario resta
+    def obtener_totales_monedas(self):
+        self.diccionario_resta = {
+            clave: self.nuevo_diccionario_to[clave] -
+            self.nuevo_diccionario_from[clave]
+            for clave in self.nuevo_diccionario_to}
+        print('diccionario resta', self.diccionario_resta)
+
+        return self.diccionario_resta
+
+    # def encontrar_monedas(self, lista_diccionarios):
+    #     for moneda in monedas:
+    #         if moneda in lista_diccionarios:
+    #             return True
+    #         else:
+    #             return False
+
+    # def filtrar_monedas(self, diccionario):
+    #     coinapi_dict_filtrado = filter(
+    #         self.encontrar_monedas, diccionario)
+    #     return coinapi_dict_filtrado
+
+    # def consultar_tasa(self):
+        # consulta = Consulta_coinapi('EUR', '', 1)
+        # print(consulta)
