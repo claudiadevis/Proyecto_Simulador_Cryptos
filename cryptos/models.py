@@ -264,8 +264,10 @@ class Cartera():
         self.monedas = monedas
         self.RUTA_DB = RUTA_DB
         self.diccionario_resta = {}
-        self.total_euros = {}
+        self.total_euros_inv = 0
+        self.total_euros_venta = 0
         self.euros_equiv = {}
+        self.total_eur_equiv = 0
 
     def consulta_sql(self):
         diccionario_to_sql = {}
@@ -318,16 +320,24 @@ class Cartera():
 
     def obtener_euros_invertidos(self):
         if self.nuevo_diccionario_from['EUR']:
-            self.total_euros = self.nuevo_diccionario_from['EUR']
+            self.total_euros_inv = self.nuevo_diccionario_from['EUR']
         else:
-            self.total_euros = 0
-        return self.total_euros
+            self.total_euros_inv = 0
+        return self.total_euros_inv
+
+    def obtener_euros_venta(self):
+        if self.nuevo_diccionario_to['EUR']:
+            self.total_euros_venta = self.nuevo_diccionario_to['EUR']
+        else:
+            self.total_euros_venta = 0
+        return self.total_euros_venta
 
         # diccionario resta
+
     def obtener_totales_monedas(self):
         self.diccionario_resta = {
-            clave: self.nuevo_diccionario_to[clave] -
-            self.nuevo_diccionario_from[clave]
+            clave: round(self.nuevo_diccionario_to[clave] -
+                         self.nuevo_diccionario_from[clave], 6)
             for clave in self.nuevo_diccionario_to}
         # print('diccionario resta', self.diccionario_resta)
 
@@ -357,3 +367,7 @@ class Cartera():
         }
         # print(self.euros_equiv)
         return self.euros_equiv
+
+    def calcular_total_euros_equiv(self):
+        self.total_eur_equiv = round(sum(self.euros_equiv.values()), 2)
+        return self.total_eur_equiv

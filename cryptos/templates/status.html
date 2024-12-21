@@ -6,9 +6,9 @@
 
 {% block contenido %}
 
-<h2>
-    Invertido (EUR):
-    <span class="linea_borde">{{total_euros}}</span>
+<h2 class="linea">
+    <div>Invertido (EUR): <span class="linea_borde">{{total_euros_from}}</span></div>
+    <div>Retirado (EUR): <span class="linea_borde">{{total_euros_to}}</span></div>
 </h2>
 
 <table class='paper tabla'>
@@ -27,5 +27,10 @@
     {% endif %}
     {% endfor %}
 </table>
+
+<h2 class="linea">
+    <div>Ganancia (EUR):<span class="linea_borde">{{ganancia}}</span></div>
+    <div>Total EUR equivalentes:<span class="linea_borde">{{total_eur_equiv}}</span></div>
+</h2>
 
 {% endblock %}

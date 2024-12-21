@@ -77,8 +77,11 @@ def compra():
 def estado():
     cartera = Cartera()
     cartera.consulta_sql()
-    total_euros = cartera.obtener_euros_invertidos()
+    total_euros_from = cartera.obtener_euros_invertidos()
+    total_euros_to = cartera.obtener_euros_venta()
     # print(total_euros)
     totales_monedas = cartera.obtener_totales_monedas()
     eur_equiv = cartera.obtener_equivalentes()
-    return render_template('status.html', totales_monedas=totales_monedas, total_euros=total_euros, eur_equiv=eur_equiv)
+    total_eur_equiv = cartera.calcular_total_euros_equiv()
+    ganancia = round(total_eur_equiv + total_euros_to - total_euros_from, 2)
+    return render_template('status.html', totales_monedas=totales_monedas, total_euros_from=total_euros_from, total_euros_to=total_euros_to, eur_equiv=eur_equiv, total_eur_equiv=total_eur_equiv, ganancia=ganancia)
