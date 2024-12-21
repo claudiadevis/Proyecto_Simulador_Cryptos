@@ -220,25 +220,24 @@ class Consulta_coinapi:
 
         if response.status_code == 200:
             exchange = response.json()
-            rate = exchange.get('rate', 0)
-            datetime = exchange.get('time', '')
-            self.tasa = float(rate)
-            if self.tasa > 0:
-                tasa_fecha = [self.tasa, datetime]
-                return tasa_fecha
-            else:
-                return 'La tasa es menor que cero, no se puede efectuar la transacción'
+            return exchange
         else:
             return 'Ha ocurrido un error con la petición a Coinapi'
 
-    def obtener_fecha(self, fecha_hora):
+    def obtener_fecha(self, json_coinapi):
+        fecha_hora = json_coinapi.get('time', '')
         fecha, hora = fecha_hora.split('T')
         self.fecha = fecha
         self.hora = hora[:-1]
 
-    def calcular_cantidad_to(self):
-        self.cantidad_to = self.cantidad_from * self.tasa
-        return self.cantidad_to
+    def calcular_cantidad_to(self, json_coinapi):
+        rate = json_coinapi.get('rate', 0)
+        self.tasa = float(rate)
+        if self.tasa > 0:
+            self.cantidad_to = self.cantidad_from * self.tasa
+            return self.cantidad_to
+        else:
+            return 'La tasa es menor que cero, no se puede efectuar la transacción'
 
     def calcular_precio_unitario(self):
         precio_unitario = self.cantidad_from / self.cantidad_to
@@ -334,18 +333,15 @@ class Cartera():
 
         return self.diccionario_resta
 
-    def encontrar_monedas(self, lista_diccionarios):
-        for moneda in monedas:
-            if moneda in lista_diccionarios:
-                return True
-            else:
-                return False
+    # def encontrar_monedas(self, diccionario):
+    #     if diccionario['asset_id_quote'] in monedas:
+    #         return True
+    #     return False
 
-    def filtrar_monedas(self, diccionario):
-        coinapi_dict_filtrado = filter(
-            self.encontrar_monedas, diccionario)
-        return coinapi_dict_filtrado
-
-    def consultar_tasa(self):
-        consulta = Consulta_coinapi('EUR', '', 1)
-        print(consulta)
+    # def filtrar_monedas(self):
+    #     consulta = Consulta_coinapi('EUR', '', 1)
+    #     print(consulta)
+    #     dict_filtrado = filter(
+    #         self.encontrar_monedas, consulta)
+    #     print(dict_filtrado)
+    #     return dict_filtrado
