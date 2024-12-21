@@ -18,10 +18,11 @@
         <th>Euros equivalentes:</th>
     </tr>
     {% for moneda, total in totales_monedas.items() %}
-    {% if moneda != 'EUR' %}
+    {% if moneda != 'EUR' and total != 0 %}
     <tr class="fila">
         <td>{{ moneda }}</td>
         <td>{{ total }}</td>
+        <td>{{ eur_equiv.get(moneda, 0) }}</td>
     </tr>
     {% endif %}
     {% endfor %}

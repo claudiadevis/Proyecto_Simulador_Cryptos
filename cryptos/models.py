@@ -338,7 +338,7 @@ class Cartera():
             return True
         return False
 
-    def filtrar_monedas(self):
+    def obtener_equivalentes(self):
         consulta = Consulta_coinapi('EUR', '', 1)
         exchange = consulta.consultar_tasa()
         tasas = exchange['rates']
@@ -353,7 +353,7 @@ class Cartera():
         # print('tasas_monedas', tasas_monedas)
 
         self.euros_equiv = {
-            moneda: self.diccionario_resta[moneda] * 1/tasas_monedas[moneda] for moneda in self.diccionario_resta if moneda in tasas_monedas
+            moneda: round(self.diccionario_resta[moneda] * 1/tasas_monedas[moneda], 2) for moneda in self.diccionario_resta if moneda in tasas_monedas
         }
         # print(self.euros_equiv)
         return self.euros_equiv
