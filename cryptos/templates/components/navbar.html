@@ -1,7 +1,19 @@
 <nav class="navbar">
+    {% if current_path == '/' %}
+    <a>Inicio</a>
+    {% else %}
     <a href="/">Inicio</a>
+    {% endif %}
     |
+    {% if current_path == '/compra' %}
+    <a>Compra</a>
+    {% else %}
     <a href="/compra">Compra</a>
+    {% endif %}
     |
+    {% if current_path == '/status' %}
+    <a>Status</a>
+    {% else %}
     <a href="/status">Status</a>
+    {% endif %}
 </nav>

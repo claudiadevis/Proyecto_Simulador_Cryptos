@@ -18,7 +18,7 @@ def home():
 def compra():
     formulario = MovimientoForm(data=request.form)
     if request.method == 'GET':
-        return render_template('compra.html', form=formulario)
+        return render_template('compra.html', form=formulario, current_path=request.path)
 
     if request.method == 'POST':
 
@@ -38,10 +38,10 @@ def compra():
                     consulta.calcular_cantidad_to(json_coinapi), 6)
                 precio_unitario = round(consulta.calcular_precio_unitario(), 6)
 
-                return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario, blockControl=True)
+                return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario, blockControl=True, current_path=request.path)
 
             else:
-                return render_template('compra.html', form=formulario)
+                return render_template('compra.html', form=formulario, current_path=request.path)
 
         elif boton == 'enviar':
             if formulario.validate():
@@ -69,7 +69,8 @@ def compra():
                     flash('Houston, tenemos un problema')
 
                 return redirect(url_for('home'))
-
+            else:
+                return render_template('compra.html', form=formulario, current_path=request.path)
     else:
         return "Error"
 
@@ -90,7 +91,7 @@ def estado():
         ganancia = round(total_eur_equiv + total_euros_to -
                          total_euros_from, 2)
 
-        return render_template('status.html', resultado=True, totales_monedas=totales_monedas, total_euros_from=total_euros_from, total_euros_to=total_euros_to, eur_equiv=eur_equiv, total_eur_equiv=total_eur_equiv, ganancia=ganancia)
+        return render_template('status.html', resultado=True, totales_monedas=totales_monedas, total_euros_from=total_euros_from, total_euros_to=total_euros_to, eur_equiv=eur_equiv, total_eur_equiv=total_eur_equiv, ganancia=ganancia, current_path=request.path)
 
     else:
-        return render_template('status.html', resultado=False, total_euros_from=0, total_euros_to=0, total_eur_equiv=0, ganancia=0)
+        return render_template('status.html', resultado=False, total_euros_from=0, total_euros_to=0, total_eur_equiv=0, ganancia=0, current_path=request.path)

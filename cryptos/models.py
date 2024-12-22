@@ -23,9 +23,6 @@ monedas = [
 
 
 class DBManager:
-    """
-    Clase para interactuar con la base de datos
-    """
 
     def __init__(self, ruta):
         self.ruta = ruta
@@ -55,6 +52,7 @@ class DBManager:
         return self.registros
 
     def agregar_movimiento(self, Movimiento):
+
         conexion = sqlite3.connect(self.ruta)
         cursor = conexion.cursor()
 
@@ -269,6 +267,14 @@ class Cartera():
         self.total_eur_equiv = 0
 
     def consulta_sql(self):
+        """
+        Este método devuelve una lista con dos diccionarios-
+        El diccionario from contiene el listado de todas las monedas, estén o no la columna "From"
+        y la suma de las cantidades para cada moneda. De no existir alguna de las cryptos entonces
+        en cantidad devuelve 0.
+        El diccionario to es similar al from, la diferencia es que toma las columnas To con sus respectivas
+        cantidades en vez de from.
+        """
         diccionario_to_sql = {}
         diccionario_from_sql = {}
         db = DBManager(RUTA_DB)
@@ -294,14 +300,12 @@ class Cartera():
                         break
                     else:
                         self.nuevo_diccionario_to[moneda] = 0
-            # print('diccionario to', self.nuevo_diccionario_to)
 
             # diccionario from
             for diccionario in lista_from:
                 nueva_clave = diccionario['from_currency']
                 nuevo_valor = diccionario['suma_from']
                 diccionario_from_sql[nueva_clave] = nuevo_valor
-            # print(diccionario_from_sql)
 
             for moneda in monedas:
                 for clave, valor in diccionario_from_sql.items():
@@ -310,7 +314,6 @@ class Cartera():
                         break
                     else:
                         self.nuevo_diccionario_from[moneda] = 0
-            # print('diccionario from', self.nuevo_diccionario_from)
 
             diccionarios = [self.nuevo_diccionario_from,
                             self.nuevo_diccionario_to]
@@ -320,6 +323,10 @@ class Cartera():
             return None
 
     def obtener_euros_invertidos(self):
+        """
+        Este método devuelve la suma de los euros invertidos, es decir, la suma de EUR que se encuentran
+        en la columna From de los movimientos.
+        """
         if self.nuevo_diccionario_from['EUR']:
             self.total_euros_inv = self.nuevo_diccionario_from['EUR']
         else:
@@ -327,29 +334,43 @@ class Cartera():
         return self.total_euros_inv
 
     def obtener_euros_venta(self):
+        """
+        Este método devuelve la suma de los euros retirados, es decir, la suma de EUR que se encuentran
+        en la columna To de los movimientos.
+        """
         if self.nuevo_diccionario_to['EUR']:
             self.total_euros_venta = self.nuevo_diccionario_to['EUR']
         else:
             self.total_euros_venta = 0
         return self.total_euros_venta
 
-        # diccionario resta
-
     def obtener_totales_monedas(self):
+        """
+        Este método devuelve otro diccionario con las diferencias entre to y from por cada una de las monedas.
+        Es básicamente la tabla que se muestra en status, a excepción de que este diccionario incluye
+        todas las monedas del proyecto (devuelve 0 en cantidad si estas monedas no se encuentran en "from" ni "to")
+        """
         self.diccionario_resta = {
             clave: round(self.nuevo_diccionario_to[clave] -
                          self.nuevo_diccionario_from[clave], 6)
             for clave in self.nuevo_diccionario_to}
-        # print('diccionario resta', self.diccionario_resta)
 
         return self.diccionario_resta
 
     def encontrar_monedas(self, diccionario):
+        """
+        Este método únicamente se utiliza para el siguiente método obtener_equivalentes. Devuelve True si en diccionario con clave
+        "asset_id_quote" se encuentran las monedas del proyecto.
+        """
         if diccionario['asset_id_quote'] in monedas:
             return True
         return False
 
     def obtener_equivalentes(self):
+        """
+        Este método devuelve un diccionario únicamente con las monedas que se encuentran en la tabla de movimientos
+        y sus cantidades equivalentes e euros utilizando la tasa de conversión de coinapi.
+        """
         consulta = Consulta_coinapi('EUR', '', 1)
         exchange = consulta.consultar_tasa()
         tasas = exchange['rates']
@@ -359,16 +380,15 @@ class Cartera():
 
         tasas_monedas = {item['asset_id_quote']: item['rate']
                          for item in dict_filtrado}
-        # print('resultado_filtrado', tasas_monedas)
-
-        # print('tasas_monedas', tasas_monedas)
 
         self.euros_equiv = {
             moneda: round(self.diccionario_resta[moneda] * 1/tasas_monedas[moneda], 2) for moneda in self.diccionario_resta if moneda in tasas_monedas
         }
-        # print(self.euros_equiv)
         return self.euros_equiv
 
     def calcular_total_euros_equiv(self):
+        """
+        Devuelve la suma de los valores del diccionario resultante de "obtener_equivalentes"
+        """
         self.total_eur_equiv = round(sum(self.euros_equiv.values()), 2)
         return self.total_eur_equiv
