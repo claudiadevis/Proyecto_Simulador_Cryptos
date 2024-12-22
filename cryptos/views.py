@@ -34,8 +34,9 @@ def compra():
                 consulta = Consulta_coinapi(
                     moneda_from, moneda_to, cantidad_from)
                 json_coinapi = consulta.consultar_tasa()
-                cantidad_to = consulta.calcular_cantidad_to(json_coinapi)
-                precio_unitario = consulta.calcular_precio_unitario()
+                cantidad_to = round(
+                    consulta.calcular_cantidad_to(json_coinapi), 6)
+                precio_unitario = round(consulta.calcular_precio_unitario(), 6)
 
                 return render_template('compra.html', form=formulario, cantidad_to=cantidad_to, precio_unitario=precio_unitario, blockControl=True)
 
@@ -67,7 +68,7 @@ def compra():
                 else:
                     flash('Houston, tenemos un problema')
 
-                return render_template('compra.html', form=formulario)
+                return render_template('inicio.html', movs=lista.movimientos)
 
     else:
         return "Error"

@@ -13,7 +13,9 @@
     </p>
 
     <ul>
-        {{ form.errors}}
+        {% for clave, valor in form.errors.items() %}
+        <li>{{clave}} tiene errores</li>
+        {% endfor %}
     </ul>
 </div>
 {% endif %}
@@ -44,6 +46,22 @@
     </div>
 
     <div class="linea">
+        {% if form.errors['moneda_from'] %}
+        {% for error_moneda_from in form.errors['moneda_from'] %}
+        <div class="error">{{error_moneda_from}}</div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="error_derecha">
+            {% if form.errors['moneda_to'] %}
+            {% for error_moneda_to in form.errors['moneda_to'] %}
+            <div class="error">{{error_moneda_to}}</div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="linea">
         <div class="campo">
             {{form.cantidad.label}}
             {{form.cantidad}}
@@ -58,7 +76,13 @@
             </div>
         </div>
     </div>
-
+    <div class="linea">
+        {% if form.errors['cantidad'] %}
+        {% for error_cantidad in form.errors['cantidad'] %}
+        <div class="error">{{error_cantidad}}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
 
     <div class="campo derecha">
         <label for="P.U.">P.U.:</label>
@@ -66,7 +90,7 @@
     </div>
 
     <div class="campo derecha">
-        <button name="boton" value="enviar" class="mini-boton">
+        <button name="boton" value="enviar" class="mini-boton_PU">
             <i class="fa-solid fa-check fa-custom-size"></i>
         </button>
     </div>

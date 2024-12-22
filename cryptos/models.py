@@ -260,9 +260,6 @@ class Consulta_coinapi:
 class Cartera():
 
     def __init__(self):
-        self.total = 0
-        self.monedas = monedas
-        self.RUTA_DB = RUTA_DB
         self.diccionario_resta = {}
         self.total_euros_inv = 0
         self.nuevo_diccionario_to = {}

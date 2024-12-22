@@ -28,14 +28,17 @@ def validate_Q_disponible(form, field):
     cartera.consulta_sql()
     monedas_disponibles = cartera.obtener_totales_monedas()
     moneda_from = form.moneda_from.data
+    if moneda_from == '':
+        raise ValidationError(f'Selecciona una moneda del desplegable')
 
-    if monedas_disponibles[moneda_from] == 0:
-        raise ValidationError(
-            f'La moneda "{moneda_from}" no existe en tu cartera')
-    moneda_disponible = monedas_disponibles[moneda_from]
-    if field.data > moneda_disponible:
-        raise ValidationError(f'No tienes suficientes "{
-            moneda_from}" en tu cartera para efectuar esta operación')
+    if moneda_from != 'EUR':
+        if monedas_disponibles[moneda_from] == 0:
+            raise ValidationError(
+                f'La moneda "{moneda_from}" no existe en tu cartera')
+        moneda_disponible = monedas_disponibles[moneda_from]
+        if field.data > moneda_disponible:
+            raise ValidationError(f'No tienes suficientes "{
+                moneda_from}" en tu cartera para efectuar esta operación')
 
 
 class MovimientoForm(FlaskForm):
@@ -56,12 +59,12 @@ class MovimientoForm(FlaskForm):
 
     moneda_from = SelectField('From:', choices=lista_monedas,
                               validators=[DataRequired(
-                                  'Debe ingresar una moneda'), validate_moneda],
+                                  'Debe ingresar una moneda origen'), validate_moneda],
                               render_kw={'disabled': False}
                               )
 
     moneda_to = SelectField('To:', choices=lista_monedas,
-                            validators=[DataRequired('Debe ingresar una moneda'),
+                            validators=[DataRequired('Debe ingresar una moneda destino'),
                                         validate_moneda, validate_monedas],
                             render_kw={'disabled': False}
                             )
