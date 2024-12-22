@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 
 from . import app
 from .models import Cartera, ListaMovimientosDB, Consulta_coinapi, Movimiento
@@ -68,7 +68,7 @@ def compra():
                 else:
                     flash('Houston, tenemos un problema')
 
-                return render_template('inicio.html', movs=lista.movimientos)
+                return redirect(url_for('home'))
 
     else:
         return "Error"
@@ -78,8 +78,8 @@ def compra():
 def estado():
     cartera = Cartera()
     cartera.consulta_sql()
-    total_euros_from = cartera.obtener_euros_invertidos()
-    total_euros_to = cartera.obtener_euros_venta()
+    total_euros_from = round(cartera.obtener_euros_invertidos(), 2)
+    total_euros_to = round(cartera.obtener_euros_venta(), 2)
     # print(total_euros)
 
     totales_monedas = cartera.obtener_totales_monedas()

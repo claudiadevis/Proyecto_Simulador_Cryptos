@@ -162,7 +162,7 @@ class Movimiento:
         if self.cantidad_to:
             if self.cantidad_from:
                 self.precio_unitario = round(
-                    self.cantidad_from / self.cantidad_to, 4)
+                    self.cantidad_from / self.cantidad_to, 8)
 
     @property
     def has_errors(self):
@@ -221,7 +221,7 @@ class Consulta_coinapi:
             exchange = response.json()
             return exchange
         else:
-            return 'Ha ocurrido un error con la petición a Coinapi'
+            return (f'Error', response.status_code, ':', response.reason)
 
     def obtener_fecha(self, json_coinapi):
         fecha_hora = json_coinapi.get('time', '')
@@ -271,7 +271,7 @@ class Cartera():
     def consulta_sql(self):
         diccionario_to_sql = {}
         diccionario_from_sql = {}
-        db = DBManager(self.RUTA_DB)
+        db = DBManager(RUTA_DB)
 
         consulta_to = 'SELECT to_currency, SUM(to_quantity) as suma_to FROM movimientos GROUP BY to_currency'
         lista_to = db.consultarSQL(consulta_to)
@@ -341,7 +341,7 @@ class Cartera():
         return self.diccionario_resta
 
     def encontrar_monedas(self, diccionario):
-        if diccionario['asset_id_quote'] in self.monedas:
+        if diccionario['asset_id_quote'] in monedas:
             return True
         return False
 

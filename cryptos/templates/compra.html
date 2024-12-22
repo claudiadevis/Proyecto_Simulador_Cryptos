@@ -8,15 +8,9 @@
 
 {% if form.errors %}
 <div class="errores">
-    <p>
+    <p class="error">
         Algunos datos que has insertado son inválidos:
     </p>
-
-    <ul>
-        {% for clave, valor in form.errors.items() %}
-        <li>{{clave}} tiene errores</li>
-        {% endfor %}
-    </ul>
 </div>
 {% endif %}
 
