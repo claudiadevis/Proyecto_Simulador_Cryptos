@@ -6,7 +6,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, NumberRange
 
-from .models import monedas
+from .models import monedas, Cartera
 
 
 def validate_moneda(form, field):
@@ -21,6 +21,21 @@ def validate_monedas(form, field):
     if form.moneda_from.data == field.data:
         raise ValidationError(
             'No se permite una transacción con moneda origen y destino iguales')
+
+
+def validate_Q_disponible(form, field):
+    cartera = Cartera()
+    cartera.consulta_sql()
+    monedas_disponibles = cartera.obtener_totales_monedas()
+    moneda_from = form.moneda_from.data
+
+    if monedas_disponibles[moneda_from] == 0:
+        raise ValidationError(
+            f'La moneda "{moneda_from}" no existe en tu cartera')
+    moneda_disponible = monedas_disponibles[moneda_from]
+    if field.data > moneda_disponible:
+        raise ValidationError(f'No tienes suficientes "{
+            moneda_from}" en tu cartera para efectuar esta operación')
 
 
 class MovimientoForm(FlaskForm):
@@ -52,7 +67,8 @@ class MovimientoForm(FlaskForm):
                             )
 
     cantidad = DecimalField('Q:', places=6, validators=[
-        DataRequired('No puede haber una compra sin una cantidad'),
+        DataRequired(
+            'No puede haber una compra sin una cantidad'), validate_Q_disponible,
         NumberRange(
             min=0.00001, message='No se permiten cantidades inferiores a 0.00001')
     ])

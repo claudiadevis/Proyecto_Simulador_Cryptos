@@ -265,6 +265,8 @@ class Cartera():
         self.RUTA_DB = RUTA_DB
         self.diccionario_resta = {}
         self.total_euros_inv = 0
+        self.nuevo_diccionario_to = {}
+        self.nuevo_diccionario_from = {}
         self.total_euros_venta = 0
         self.euros_equiv = {}
         self.total_eur_equiv = 0
@@ -272,8 +274,6 @@ class Cartera():
     def consulta_sql(self):
         diccionario_to_sql = {}
         diccionario_from_sql = {}
-        self.nuevo_diccionario_to = {}
-        self.nuevo_diccionario_from = {}
         db = DBManager(self.RUTA_DB)
 
         consulta_to = 'SELECT to_currency, SUM(to_quantity) as suma_to FROM movimientos GROUP BY to_currency'
