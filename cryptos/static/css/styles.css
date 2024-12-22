@@ -61,6 +61,15 @@ label {
 .tabla {
   width: 100%;
   margin-bottom: 15px;
+  text-align: center;
+  color: #333232;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid #949191;
+  border-collapse: collapse;
 }
 
 .tabla .lista-vacia {
