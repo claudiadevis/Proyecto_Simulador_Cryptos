@@ -76,6 +76,7 @@ th {
   text-align: center;
   padding: 25px;
   color: var(--neutral-60);
+  font-size: 20px;
 }
 
 .tabla .error {
@@ -142,7 +143,7 @@ th {
 .linea_borde {
   display: inline-block;
   border-bottom: solid 1px #666666;
-  min-width: 70px
+  min-width: 10px
 }
 
 .error_derecha {

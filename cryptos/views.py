@@ -77,15 +77,20 @@ def compra():
 @app.route('/status')
 def estado():
     cartera = Cartera()
-    cartera.consulta_sql()
-    total_euros_from = round(cartera.obtener_euros_invertidos(), 2)
-    total_euros_to = round(cartera.obtener_euros_venta(), 2)
-    # print(total_euros)
+    consulta = cartera.consulta_sql()
+    if consulta:
+        total_euros_from = round(cartera.obtener_euros_invertidos(), 2)
+        total_euros_to = round(cartera.obtener_euros_venta(), 2)
+        # print(total_euros)
 
-    totales_monedas = cartera.obtener_totales_monedas()
-    eur_equiv = cartera.obtener_equivalentes()
-    total_eur_equiv = cartera.calcular_total_euros_equiv()
+        totales_monedas = cartera.obtener_totales_monedas()
+        eur_equiv = cartera.obtener_equivalentes()
+        total_eur_equiv = cartera.calcular_total_euros_equiv()
 
-    ganancia = round(total_eur_equiv + total_euros_to - total_euros_from, 2)
+        ganancia = round(total_eur_equiv + total_euros_to -
+                         total_euros_from, 2)
 
-    return render_template('status.html', totales_monedas=totales_monedas, total_euros_from=total_euros_from, total_euros_to=total_euros_to, eur_equiv=eur_equiv, total_eur_equiv=total_eur_equiv, ganancia=ganancia)
+        return render_template('status.html', resultado=True, totales_monedas=totales_monedas, total_euros_from=total_euros_from, total_euros_to=total_euros_to, eur_equiv=eur_equiv, total_eur_equiv=total_eur_equiv, ganancia=ganancia)
+
+    else:
+        return render_template('status.html', resultado=False, total_euros_from=0, total_euros_to=0, total_eur_equiv=0, ganancia=0)

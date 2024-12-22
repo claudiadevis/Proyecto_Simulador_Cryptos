@@ -280,40 +280,44 @@ class Cartera():
         lista_from = db.consultarSQL(consulta_from)
 
         # diccionario to
-        for diccionario in lista_to:
-            nueva_clave = diccionario['to_currency']
-            nuevo_valor = diccionario['suma_to']
-            diccionario_to_sql[nueva_clave] = nuevo_valor
-        # print(diccionario_to_sql)
+        if lista_to != []:
+            for diccionario in lista_to:
+                nueva_clave = diccionario['to_currency']
+                nuevo_valor = diccionario['suma_to']
+                diccionario_to_sql[nueva_clave] = nuevo_valor
+            print('lista_to:', lista_to)
 
-        for moneda in monedas:
-            for clave, valor in diccionario_to_sql.items():
-                if moneda in clave:
-                    self.nuevo_diccionario_to[moneda] = valor
-                    break
-                else:
-                    self.nuevo_diccionario_to[moneda] = 0
-        # print('diccionario to', self.nuevo_diccionario_to)
+            for moneda in monedas:
+                for clave, valor in diccionario_to_sql.items():
+                    if moneda in clave:
+                        self.nuevo_diccionario_to[moneda] = valor
+                        break
+                    else:
+                        self.nuevo_diccionario_to[moneda] = 0
+            # print('diccionario to', self.nuevo_diccionario_to)
 
-        # diccionario from
-        for diccionario in lista_from:
-            nueva_clave = diccionario['from_currency']
-            nuevo_valor = diccionario['suma_from']
-            diccionario_from_sql[nueva_clave] = nuevo_valor
-        # print(diccionario_from_sql)
+            # diccionario from
+            for diccionario in lista_from:
+                nueva_clave = diccionario['from_currency']
+                nuevo_valor = diccionario['suma_from']
+                diccionario_from_sql[nueva_clave] = nuevo_valor
+            # print(diccionario_from_sql)
 
-        for moneda in monedas:
-            for clave, valor in diccionario_from_sql.items():
-                if moneda in clave:
-                    self.nuevo_diccionario_from[moneda] = valor
-                    break
-                else:
-                    self.nuevo_diccionario_from[moneda] = 0
-        # print('diccionario from', self.nuevo_diccionario_from)
+            for moneda in monedas:
+                for clave, valor in diccionario_from_sql.items():
+                    if moneda in clave:
+                        self.nuevo_diccionario_from[moneda] = valor
+                        break
+                    else:
+                        self.nuevo_diccionario_from[moneda] = 0
+            # print('diccionario from', self.nuevo_diccionario_from)
 
-        diccionarios = [self.nuevo_diccionario_from, self.nuevo_diccionario_to]
+            diccionarios = [self.nuevo_diccionario_from,
+                            self.nuevo_diccionario_to]
 
-        return diccionarios
+            return diccionarios
+        else:
+            return None
 
     def obtener_euros_invertidos(self):
         if self.nuevo_diccionario_from['EUR']:

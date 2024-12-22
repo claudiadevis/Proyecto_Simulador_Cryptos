@@ -12,6 +12,7 @@
 </h2>
 
 <table class='paper tabla'>
+    {% if resultado %}
     <tr class="fila">
         <th>Moneda:</th>
         <th>Total:</th>
@@ -26,6 +27,11 @@
     </tr>
     {% endif %}
     {% endfor %}
+    {% else %}
+    <tr class="fila">
+        <td class="lista-vacia" colspan="3">No hay movimientos</td>
+    </tr>
+    {% endif %}
 </table>
 
 <h2 class="linea">
