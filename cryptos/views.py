@@ -11,7 +11,7 @@ from .forms import MovimientoForm
 @app.route('/')
 def home():
     lista = ListaMovimientosDB()
-    return render_template('inicio.html', movs=lista.movimientos)
+    return render_template('inicio.html', movs=lista.movimientos, current_path=request.path)
 
 
 @app.route('/compra', methods=['GET', 'POST'])
@@ -52,7 +52,7 @@ def compra():
                 consulta = Consulta_coinapi(
                     moneda_from, moneda_to, cantidad_from)
                 json_coinapi = consulta.consultar_tasa()
-                consulta.obtener_fecha(json_coinapi)
+                consulta.obtener_fecha()
                 cantidad_to = consulta.calcular_cantidad_to(json_coinapi)
                 precio_unitario = consulta.calcular_precio_unitario()
                 mov_dict = consulta.construir_diccionario()

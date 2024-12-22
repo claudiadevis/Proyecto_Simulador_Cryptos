@@ -223,11 +223,11 @@ class Consulta_coinapi:
         else:
             return (f'Error', response.status_code, ':', response.reason)
 
-    def obtener_fecha(self, json_coinapi):
-        fecha_hora = json_coinapi.get('time', '')
-        fecha, hora = fecha_hora.split('T')
-        self.fecha = fecha
-        self.hora = hora[:-1]
+    def obtener_fecha(self):
+        fecha_hora_actual = datetime.now()
+        hora = fecha_hora_actual.time()
+        self.hora = hora.strftime('%H:%M:%S')
+        self.fecha = fecha_hora_actual.date().isoformat()
 
     def calcular_cantidad_to(self, json_coinapi):
         rate = json_coinapi.get('rate', 0)
